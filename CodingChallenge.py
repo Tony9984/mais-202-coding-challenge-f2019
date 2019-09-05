@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 def openCSV(p_file):
-    
+
     """Function to open a csv file with path p_file. Returns a 2D list."""
 
     file = open(p_file, 'r', encoding='utf-8-sig')
@@ -72,11 +71,9 @@ if __name__ == '__main__':
 
     """Graph the data using matplot and set the labels"""
 
-    index = np.arange(len(labels))
-    plt.bar(index, means, width=0.6)
+    plt.bar([0, 1, 2], means, width=0.6)
     plt.xlabel('Home ownership', fontsize=12)
     plt.ylabel('Average loan amount ($)', fontsize=12)
-    plt.xticks(index, labels, fontsize=12)
     plt.title('Average loan amounts per home ownership')
     plt.show()
 
