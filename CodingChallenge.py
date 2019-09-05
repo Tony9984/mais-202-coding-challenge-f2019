@@ -2,32 +2,53 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def openCSV(p_file):
-    """Opens the csv file with path p_file. Returns a 2D list."""
+    
+    """Function to open a csv file with path p_file. Returns a 2D list."""
 
     file = open(p_file, 'r', encoding='utf-8-sig')
     data = [[n for n in line[:-1].split(',')] for line in file]  # DJ: Opens file without including \n character
 
     return data
 
-loanData = openCSV("loan_data.csv")
-del loanData[0]
-
-homeData = openCSV("home_ownership_data.csv")
-del homeData[0]
-
 if __name__ == '__main__':
+
+    """Initialize lists to store different data extracted from the csv"""
+
     loans = []
     memberIds = []
+
     rent = []
     own = []
     mortgage = []
+
     homeDataDictionary = {}
+
+    """Extract all data from both csvs and remove their headers"""
+
+    loanData = openCSV("loan_data.csv")
+    del loanData[0]
+
+    homeData = openCSV("home_ownership_data.csv")
+    del homeData[0]
+
+    """Store the memberIDs and loans columns to the appropriate list"""
+
     for list in loanData:
         loans.append(list[1])
         memberIds.append((list[0]))
 
+    """
+    Store the memberIDs as keys and their home ownership status
+    as the corresponding value in the initialized dictionary
+    """
+
     for list in homeData:
         homeDataDictionary[list[0]] = list[1]
+
+    """
+    Categorize every members' loan amounts to its appropriate 
+    list by comparing the memberIds list and the previous dictionary
+    """
 
     for i in range(len(memberIds)):
         homeStatus = homeDataDictionary[memberIds[i]]
@@ -35,15 +56,21 @@ if __name__ == '__main__':
             mortgage.append(float(loans[i]))
         elif homeStatus == 'RENT':
             rent.append(float(loans[i]))
-        else:
+        elif homeStatus == 'OWN':
             own.append(float(loans[i]))
+
+    """Calculate the average of each home ownership status"""
 
     mortgageMean = sum(mortgage)/len(mortgage)
     rentMean = sum(rent)/len(rent)
     ownMean = sum(own)/len(own)
 
+    """Prepare the graphing values"""
+
     means = [mortgageMean, ownMean, rentMean]
     labels = ["MORTGAGE", "OWN", "RENT"]
+
+    """Graph the data using matplot and set the labels"""
 
     index = np.arange(len(labels))
     plt.bar(index, means, width=0.6)
